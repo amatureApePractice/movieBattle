@@ -11,14 +11,20 @@ const fetchData = async (searchTerm) => {
 
 const input = document.querySelector('input');
 
-let timeoutId
+const debounce = (func) => {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func.apply(null, args);
+    }, 500)
+  };
+}
+
 const onInput = event => {
-  if (timeoutId) {
-    clearTimeout(timeoutId)
-  }
-  timeoutId = setTimeout(() => {
-    fetchData(event.target.value);
-  }, 500)
+  fetchData(event.target.value);
 };
 
-input.addEventListener('input', onInput);
+input.addEventListener('input', debounce(onInput));
